@@ -25,6 +25,146 @@
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <style>
+    /* GLOBAL DARK THEME */
+    :root {
+      --mobsf-bg-dark: #0d1117;
+      --mobsf-bg-card: #161b22;
+      --mobsf-bg-input: #0d1117;
+      --mobsf-border: #30363d;
+      --mobsf-text: #f0f6fc;
+      --mobsf-text-secondary: #8b949e;
+      --mobsf-green: #238636;
+      --mobsf-blue: #58a6ff;
+    }
+    
+    body {
+      background: var(--mobsf-bg-dark);
+      color: var(--mobsf-text);
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    /* Card overrides for dark theme */
+    .card {
+      background: var(--mobsf-bg-card);
+      border: 1px solid var(--mobsf-border);
+      border-radius: 12px;
+    }
+    
+    .card-header {
+      background: var(--mobsf-bg-dark);
+      border-bottom: 1px solid var(--mobsf-border);
+      color: var(--mobsf-text);
+    }
+    
+    .card-body {
+      background: var(--mobsf-bg-card);
+      color: var(--mobsf-text);
+    }
+    
+    /* Form controls */
+    .form-control {
+      background: var(--mobsf-bg-input);
+      border: 1px solid var(--mobsf-border);
+      color: var(--mobsf-text);
+      border-radius: 8px;
+    }
+    
+    .form-control:focus {
+      border-color: var(--mobsf-blue);
+      box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+    }
+    
+    /* Table overrides */
+    .table {
+      color: var(--mobsf-text);
+    }
+    
+    .table thead th {
+      background: var(--mobsf-bg-dark);
+      border-bottom: 2px solid var(--mobsf-border);
+      color: var(--mobsf-text-secondary);
+    }
+    
+    .table td, .table th {
+      border-top: 1px solid var(--mobsf-border);
+    }
+    
+    .table-hover tbody tr:hover {
+      background: rgba(88, 166, 255, 0.08);
+    }
+    
+    /* Button overrides */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--mobsf-green) 0%, #2ea043 100%);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2ea043 0%, #238636 100%);
+    }
+    
+    /* Main sidebar */
+    .main-sidebar {
+      background: var(--mobsf-bg-dark);
+    }
+    
+    .brand-link {
+      background: var(--mobsf-bg-card);
+    }
+    
+    /* Navbar */
+    .main-header {
+      background: var(--mobsf-bg-card);
+      border-bottom: 1px solid var(--mobsf-border);
+    }
+    
+    /* Content wrapper */
+    .content-wrapper {
+      background: var(--mobsf-bg-dark);
+    }
+    
+    /* Main footer */
+    .main-footer {
+      background: var(--mobsf-bg-card);
+      border-top: 1px solid var(--mobsf-border);
+      color: var(--mobsf-text-secondary);
+    }
+    
+    /* Modal overrides */
+    .modal-content {
+      background: var(--mobsf-bg-card);
+      border: 1px solid var(--mobsf-border);
+    }
+    
+    .modal-header {
+      border-bottom: 1px solid var(--mobsf-border);
+    }
+    
+    .modal-footer {
+      border-top: 1px solid var(--mobsf-border);
+    }
+    
+    /* Dropdown */
+    .dropdown-menu {
+      background: var(--mobsf-bg-card);
+      border: 1px solid var(--mobsf-border);
+    }
+    
+    .dropdown-item {
+      color: var(--mobsf-text);
+    }
+    
+    .dropdown-item:hover {
+      background: rgba(88, 166, 255, 0.1);
+    }
+    
+    /* Input group */
+    .input-group-text {
+      background: var(--mobsf-bg-input);
+      border: 1px solid var(--mobsf-border);
+      color: var(--mobsf-text-secondary);
+    }
+    
     body {
       zoom: 0.8; 
     }
@@ -34,8 +174,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 1040; /* Ensure it is above most elements but below modal */
-      background-color: rgba(0, 0, 0, 0.5); /* Default backdrop color */
+      z-index: 1040;
+      background-color: rgba(0, 0, 0, 0.7);
     }
 
   </style>

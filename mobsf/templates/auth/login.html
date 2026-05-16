@@ -3,82 +3,273 @@
 {% block sidebar_option %}
 sidebar-collapse
 {% endblock %}
+{% block extra_css %}
+<style>
+.login-page {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #21262d 100%);
+  min-height: 100vh;
+}
+
+.login-card {
+  background: rgba(22, 27, 34, 0.95);
+  border: 1px solid #30363d;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo a {
+  color: #f0f6fc;
+  font-size: 28px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.login-logo .logo-icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 24px rgba(35, 134, 54, 0.4);
+}
+
+.login-title {
+  color: #f0f6fc;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  color: #8b949e;
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.login-input {
+  background: #0d1117 !important;
+  border: 1px solid #30363d !important;
+  color: #f0f6fc !important;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.login-input:focus {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+  outline: none;
+}
+
+.login-input::placeholder {
+  color: #484f58;
+}
+
+.input-group-text {
+  background: #0d1117 !important;
+  border: 1px solid #30363d !important;
+  border-radius: 0 8px 8px 0 !important;
+  color: #8b949e !important;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(35, 134, 54, 0.4);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.sso-btn {
+  background: #21262d;
+  border: 1px solid #30363d;
+  color: #f0f6fc;
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.sso-btn:hover {
+  background: #30363d;
+  border-color: #58a6ff;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  color: #8b949e;
+  font-size: 12px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #30363d;
+}
+
+.divider span {
+  padding: 0 12px;
+}
+
+.error-message {
+  background: rgba(248, 81, 73, 0.15);
+  border: 1px solid rgba(248, 81, 73, 0.4);
+  color: #f85149;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.field-error {
+  color: #f85149;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Animated background particles */
+.login-bg-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.login-bg-animation::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: radial-gradient(circle at 20% 80%, rgba(35, 134, 54, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(88, 166, 255, 0.06) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(188, 140, 255, 0.04) 0%, transparent 30%);
+  animation: bgPulse 20s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-5%, -5%) rotate(5deg); }
+}
+
+/* Footer */
+.login-footer {
+  text-align: center;
+  margin-top: 24px;
+  color: #484f58;
+  font-size: 12px;
+}
+
+.login-footer a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+</style>
+{% endblock %}
 {% block content %}
-<div class="content-wrapper">
-   <div class="content-header">
-   </div>
-   <div class="container-fluid">
+<div class="login-page">
+  <div class="login-bg-animation"></div>
+  <div class="content-wrapper" style="position: relative; z-index: 1;">
+    <div class="container-fluid">
       <div class="row">
-         <div class="col-lg-12">
-            <div class="card">
-               <div class="card-body">
-                  <div class="h-100 d-flex align-items-center justify-content-center">
-                     <div class="login-box">
-                        <div class="login-logo">
-                           <a href="">Sign in to access</a>
-                        </div>
-                        <div class="card">
-                           <div class="card-body login-card-body">
-                              <h1 class="display-2 h-100 d-flex align-items-center justify-content-center">
-                                 Mob<strong>SF</strong>
-                              </h1>
-                              {% if allow_pwd %}
-                              <form method="post" action="{% url 'login' %}?next={{next}}">
-                                 {% csrf_token %}
-                                 {{ form.non_field_errors }}
-                                 <div class="input-group mb-3">
-                                    <input type="username" name="username" class="form-control" placeholder="Username">
-                                    <div class="input-group-append">
-                                       <div class="input-group-text">
-                                          <span class="fas fa-user"></span>
-                                       </div>
-                                    </div>
-                                 </div>
-                                 {% for err in form.username.errors %}
-                                 <small> {{ err }} </small><br>
-                                 {% endfor %}
-                                 <div class="input-group mb-3">
-                                    <input type="password" name="password" class="form-control" placeholder="Password">
-                                    <div class="input-group-append">
-                                       <div class="input-group-text">
-                                          <span class="fas fa-lock"></span>
-                                       </div>
-                                    </div>
-                                 </div>
-                                 {% for err in form.password.errors %}
-                                 <small> {{ err }} </small><br>
-                                 {% endfor %}
-                                 <div class="row">
-                                    <!-- <div class="col-8">
-                                       <div class="icheck-primary">
-                                       <input type="checkbox" id="remember">
-                                       <label for="remember">
-                                       Remember Me
-                                       </label>
-                                       </div>
-                                       </div> -->
-                                 </div>
-                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                                 </div>
-                              </form>
-                              {% endif %}
-                              {% if sso %}
-                              <hr>
-                              <p>
-                              <div class="col-12">
-                                 <a href="{% url 'saml_login' %}?next={{next}}" class="btn btn-primary btn-block">Sign in with SSO</a>
-                              </div>
-                              </p>
-                              {% endif %}
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
+        <div class="col-lg-12">
+          <div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+            <div class="login-card card" style="max-width: 400px; width: 100%; padding: 40px;">
+              <div class="login-logo">
+                <div class="logo-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="login-title">Mobile Security Framework</div>
+                <div class="login-subtitle">Sign in to access the analyzer</div>
+              </div>
+              
+              {% if allow_pwd %}
+              <form method="post" action="{% url 'login' %}?next={{next}}">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="error-message">
+                  <i class="fas fa-exclamation-circle"></i> {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                  <input type="text" name="username" class="form-control login-input" placeholder="Username" required>
+                  {% for err in form.username.errors %}
+                  <small class="field-error">{{ err }}</small>
+                  {% endfor %}
+                </div>
+                
+                <div class="mb-3">
+                  <input type="password" name="password" class="form-control login-input" placeholder="Password" required>
+                  {% for err in form.password.errors %}
+                  <small class="field-error">{{ err }}</small>
+                  {% endfor %}
+                </div>
+                
+                <button type="submit" class="login-btn">
+                  <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+              </form>
+              {% endif %}
+              
+              {% if sso %}
+              <div class="divider"><span>or</span></div>
+              <a href="{% url 'saml_login' %}?next={{next}}" class="sso-btn">
+                <i class="fas fa-id-card"></i> Sign in with SSO
+              </a>
+              {% endif %}
+              
+              <div class="login-footer">
+                <p>Version {{ version|default:"3.0" }} &copy; {% now "Y" %} MobSF</p>
+              </div>
             </div>
-         </div>
+          </div>
+        </div>
       </div>
-   </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
