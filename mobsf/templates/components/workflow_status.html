@@ -1,0 +1,121 @@
+{% comment %}
+  Analysis Workflow Status Panel Component
+  
+  Displays the current status of each analysis stage with visual indicators.
+  
+  Usage:
+  {% include "components/workflow_status.html" with stages=workflow_stages %}
+  
+  Required context:
+  - stages: List of stage objects with:
+    - name: Stage name
+    - status: "pending", "running", "success", or "failed"
+    - label: Optional display label
+{% endcomment %}
+
+<div class="workflow-status-panel">
+  <div class="workflow-header">
+    <span><i class="fas fa-tasks"></i> Analysis Progress</span>
+    <span id="workflowProgress" style="font-size: 0.85rem; color: var(--mobsf-text-secondary);">0% Complete</span>
+  </div>
+  
+  <div class="workflow-steps" id="workflowSteps">
+    {% for stage in stages %}
+    <div class="workflow-step {{ stage.status }}" data-stage="{{ stage.name }}">
+      <span class="step-indicator">
+        {% if stage.status == "pending" %}
+          {{ forloop.counter }}
+        {% elif stage.status == "running" %}
+          <i class="fas fa-spinner fa-spin"></i>
+        {% elif stage.status == "success" %}
+          <i class="fas fa-check"></i>
+        {% elif stage.status == "failed" %}
+          <i class="fas fa-times"></i>
+        {% endif %}
+      </span>
+      <span class="step-label">{{ stage.label|default:stage.name }}</span>
+    </div>
+    {% empty %}
+    <!-- Default stages if none provided -->
+    <div class="workflow-step pending" data-stage="environment">
+      <span class="step-indicator">1</span>
+      <span class="step-label">Environment</span>
+    </div>
+    <div class="workflow-step pending" data-stage="device">
+      <span class="step-indicator">2</span>
+      <span class="step-label">Device Connection</span>
+    </div>
+    <div class="workflow-step pending" data-stage="frida">
+      <span class="step-indicator">3</span>
+      <span class="step-label">Frida Injection</span>
+    </div>
+    <div class="workflow-step pending" data-stage="apk">
+      <span class="step-indicator">4</span>
+      <span class="step-label">APK Installation</span>
+    </div>
+    <div class="workflow-step pending" data-stage="runtime">
+      <span class="step-indicator">5</span>
+      <span class="step-label">Runtime Monitoring</span>
+    </div>
+    <div class="workflow-step pending" data-stage="traffic">
+      <span class="step-indicator">6</span>
+      <span class="step-label">Traffic Capture</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+(function() {
+  // Calculate and update progress
+  function updateProgress() {
+    const steps = document.querySelectorAll('.workflow-step');
+    if (!steps.length) return;
+    
+    let completed = 0;
+    let total = steps.length;
+    
+    steps.forEach(function(step) {
+      if (step.classList.contains('success')) {
+        completed++;
+      } else if (step.classList.contains('running')) {
+        completed += 0.5; // Count running as half
+      }
+    });
+    
+    const percent = Math.round((completed / total) * 100);
+    const progressEl = document.getElementById('workflowProgress');
+    if (progressEl) {
+      progressEl.textContent = percent + '% Complete';
+    }
+  }
+  
+  // Expose function for updating stage status
+  window.updateWorkflowStage = function(stageName, status) {
+    const steps = document.querySelectorAll('.workflow-step');
+    steps.forEach(function(step) {
+      if (step.dataset.stage === stageName) {
+        // Remove all status classes
+        step.classList.remove('pending', 'running', 'success', 'failed');
+        step.classList.add(status);
+        
+        // Update indicator
+        const indicator = step.querySelector('.step-indicator');
+        if (indicator) {
+          if (status === 'running') {
+            indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+          } else if (status === 'success') {
+            indicator.innerHTML = '<i class="fas fa-check"></i>';
+          } else if (status === 'failed') {
+            indicator.innerHTML = '<i class="fas fa-times"></i>';
+          }
+        }
+      }
+    });
+    updateProgress();
+  };
+  
+  // Initial update
+  updateProgress();
+})();
+</script>

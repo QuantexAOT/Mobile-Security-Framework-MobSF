@@ -1,0 +1,850 @@
+/**
+ * MobSF Modern UI/UX Styles
+ * A professional, security-tool oriented design system
+ * Inspired by Burp Suite, Android Studio, and modern SOC dashboards
+ */
+
+/* ============================================
+   CSS Custom Properties (Design Tokens)
+   ============================================ */
+:root {
+  /* Primary Colors - Security Tool Palette */
+  --mobsf-primary: #1a73e8;
+  --mobsf-primary-dark: #1557b0;
+  --mobsf-primary-light: #4a90e8;
+  
+  /* Background Colors */
+  --mobsf-bg-dark: #1e1e1e;
+  --mobsf-bg-darker: #121212;
+  --mobsf-bg-light: #2d2d2d;
+  --mobsf-bg-card: #ffffff;
+  --mobsf-bg-card-alt: #f8f9fa;
+  
+  /* Text Colors */
+  --mobsf-text-primary: #212529;
+  --mobsf-text-secondary: #6c757d;
+  --mobsf-text-muted: #adb5bd;
+  --mobsf-text-light: #f8f9fa;
+  --mobsf-text-dark: #000000;
+  
+  /* Status Colors */
+  --mobsf-success: #28a745;
+  --mobsf-success-light: #d4edda;
+  --mobsf-warning: #ffc107;
+  --mobsf-warning-light: #fff3cd;
+  --mobsf-danger: #dc3545;
+  --mobsf-danger-light: #f8d7da;
+  --mobsf-info: #17a2b8;
+  --mobsf-info-light: #d1ecf1;
+  
+  /* Log Level Colors */
+  --log-info: #6bb3f8;
+  --log-warning: #f5c242;
+  --log-error: #ff6b6b;
+  --log-debug: #a0a0a0;
+  --log-success: #4cd964;
+  
+  /* Device Status Colors */
+  --device-connected: #4cd964;
+  --device-disconnected: #ff6b6b;
+  --device-emulator: #ffcc00;
+  --device-rooted: #ff9500;
+  --device-frida-active: #30d158;
+  
+  /* Borders */
+  --mobsf-border: #dee2e6;
+  --mobsf-border-dark: #343a40;
+  
+  /* Shadows */
+  --mobsf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --mobsf-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --mobsf-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* Spacing */
+  --mobsf-spacing-xs: 0.25rem;
+  --mobsf-spacing-sm: 0.5rem;
+  --mobsf-spacing-md: 1rem;
+  --mobsf-spacing-lg: 1.5rem;
+  --mobsf-spacing-xl: 2rem;
+  
+  /* Border Radius */
+  --mobsf-radius-sm: 4px;
+  --mobsf-radius-md: 6px;
+  --mobsf-radius-lg: 8px;
+  --mobsf-radius-xl: 12px;
+  
+  /* Typography */
+  --mobsf-font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  --mobsf-font-sans: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  
+  /* Transitions */
+  --mobsf-transition: all 0.2s ease-in-out;
+}
+
+/* ============================================
+   Device Status Panel
+   ============================================ */
+.device-status-panel {
+  background: var(--mobsf-bg-card);
+  border-radius: var(--mobsf-radius-lg);
+  box-shadow: var(--mobsf-shadow-md);
+  overflow: hidden;
+}
+
+.device-status-panel .panel-header {
+  background: linear-gradient(135deg, var(--mobsf-primary) 0%, var(--mobsf-primary-dark) 100%);
+  color: white;
+  padding: var(--mobsf-spacing-md) var(--mobsf-spacing-lg);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.device-status-panel .panel-header i {
+  opacity: 0.9;
+}
+
+.device-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--mobsf-spacing-md);
+  padding: var(--mobsf-spacing-lg);
+}
+
+.device-status-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mobsf-spacing-xs);
+  padding: var(--mobsf-spacing-md);
+  background: var(--mobsf-bg-card-alt);
+  border-radius: var(--mobsf-radius-md);
+  border: 1px solid var(--mobsf-border);
+  transition: var(--mobsf-transition);
+}
+
+.device-status-item:hover {
+  border-color: var(--mobsf-primary);
+  box-shadow: var(--mobsf-shadow-sm);
+}
+
+.device-status-item .status-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--mobsf-text-secondary);
+  font-weight: 600;
+}
+
+.device-status-item .status-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mobsf-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--mobsf-spacing-sm);
+}
+
+.device-status-item .status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge.connected {
+  background: rgba(76, 217, 100, 0.15);
+  color: var(--device-connected);
+}
+
+.status-badge.disconnected {
+  background: rgba(255, 107, 107, 0.15);
+  color: var(--device-disconnected);
+}
+
+.status-badge.emulator {
+  background: rgba(255, 204, 0, 0.15);
+  color: var(--device-emulator);
+}
+
+.status-badge.real-device {
+  background: rgba(26, 115, 232, 0.15);
+  color: var(--mobsf-primary);
+}
+
+.status-badge.rooted {
+  background: rgba(255, 149, 0, 0.15);
+  color: var(--device-rooted);
+}
+
+.status-badge.not-rooted {
+  background: rgba(108, 117, 125, 0.15);
+  color: var(--mobsf-text-secondary);
+}
+
+.status-badge.frida-active {
+  background: rgba(48, 209, 88, 0.15);
+  color: var(--device-frida-active);
+}
+
+.status-badge.frida-inactive {
+  background: rgba(108, 117, 125, 0.15);
+  color: var(--mobsf-text-secondary);
+}
+
+.status-badge.enforcing {
+  background: rgba(76, 217, 100, 0.15);
+  color: var(--device-connected);
+}
+
+.status-badge.permissive {
+  background: rgba(255, 193, 7, 0.15);
+  color: var(--mobsf-warning);
+}
+
+/* Icon styling in status panels */
+.device-status-item .status-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   Analysis Workflow Status
+   ============================================ */
+.workflow-status-panel {
+  background: var(--mobsf-bg-card);
+  border-radius: var(--mobsf-radius-lg);
+  box-shadow: var(--mobsf-shadow-md);
+  overflow: hidden;
+  margin-bottom: var(--mobsf-spacing-lg);
+}
+
+.workflow-status-panel .workflow-header {
+  background: var(--mobsf-bg-card-alt);
+  padding: var(--mobsf-spacing-md) var(--mobsf-spacing-lg);
+  border-bottom: 1px solid var(--mobsf-border);
+  font-weight: 600;
+  color: var(--mobsf-text-primary);
+}
+
+.workflow-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mobsf-spacing-sm);
+  padding: var(--mobsf-spacing-lg);
+}
+
+.workflow-step {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  gap: var(--mobsf-spacing-sm);
+  padding: var(--mobsf-spacing-sm) var(--mobsf-spacing-md);
+  border-radius: var(--mobsf-radius-md);
+  background: var(--mobsf-bg-card-alt);
+  border: 1px solid var(--mobsf-border);
+  transition: var(--mobsf-transition);
+}
+
+.workflow-step .step-indicator {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.workflow-step .step-label {
+  font-size: 0.8rem;
+  color: var(--mobsf-text-secondary);
+}
+
+/* Workflow Step States */
+.workflow-step.pending {
+  opacity: 0.6;
+}
+
+.workflow-step.pending .step-indicator {
+  background: var(--mobsf-text-muted);
+  color: white;
+}
+
+.workflow-step.running {
+  border-color: var(--mobsf-info);
+  background: var(--mobsf-info-light);
+}
+
+.workflow-step.running .step-indicator {
+  background: var(--mobsf-info);
+  color: white;
+  animation: pulse 1.5s infinite;
+}
+
+.workflow-step.success {
+  border-color: var(--mobsf-success);
+  background: var(--mobsf-success-light);
+}
+
+.workflow-step.success .step-indicator {
+  background: var(--mobsf-success);
+  color: white;
+}
+
+.workflow-step.failed {
+  border-color: var(--mobsf-danger);
+  background: var(--mobsf-danger-light);
+}
+
+.workflow-step.failed .step-indicator {
+  background: var(--mobsf-danger);
+  color: white;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ============================================
+   Modern Log Console
+   ============================================ */
+.log-console {
+  background: var(--mobsf-bg-dark);
+  border-radius: var(--mobsf-radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  box-shadow: var(--mobsf-shadow-lg);
+}
+
+.log-console .log-header {
+  background: var(--mobsf-bg-darker);
+  padding: var(--mobsf-spacing-sm) var(--mobsf-spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--mobsf-border-dark);
+}
+
+.log-console .log-title {
+  color: var(--mobsf-text-light);
+  font-weight: 600;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: var(--mobsf-spacing-sm);
+}
+
+.log-console .log-controls {
+  display: flex;
+  gap: var(--mobsf-spacing-sm);
+  align-items: center;
+}
+
+.log-console .log-filter-btn {
+  background: transparent;
+  border: 1px solid var(--mobsf-border-dark);
+  color: var(--mobsf-text-muted);
+  padding: 4px 10px;
+  border-radius: var(--mobsf-radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--mobsf-transition);
+}
+
+.log-console .log-filter-btn:hover {
+  border-color: var(--mobsf-text-muted);
+  color: var(--mobsf-text-light);
+}
+
+.log-console .log-filter-btn.active {
+  background: var(--mobsf-primary);
+  border-color: var(--mobsf-primary);
+  color: white;
+}
+
+.log-console .log-search {
+  background: var(--mobsf-bg-light);
+  border: 1px solid var(--mobsf-border-dark);
+  border-radius: var(--mobsf-radius-sm);
+  padding: 4px 10px;
+  color: var(--mobsf-text-light);
+  font-size: 0.75rem;
+  width: 150px;
+}
+
+.log-console .log-search:focus {
+  outline: none;
+  border-color: var(--mobsf-primary);
+}
+
+.log-console .log-search::placeholder {
+  color: var(--mobsf-text-muted);
+}
+
+.log-console .log-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--mobsf-spacing-md);
+  font-family: var(--mobsf-font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.log-console .log-entry {
+  display: flex;
+  gap: var(--mobsf-spacing-sm);
+  padding: 2px 0;
+  border-radius: 2px;
+}
+
+.log-console .log-entry:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.log-console .log-timestamp {
+  color: var(--mobsf-text-muted);
+  flex-shrink: 0;
+  font-size: 0.7rem;
+}
+
+.log-console .log-level {
+  flex-shrink: 0;
+  width: 60px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.log-console .log-message {
+  color: var(--mobsf-text-light);
+  word-break: break-word;
+}
+
+/* Log Level Colors */
+.log-console .log-entry.info .log-level {
+  color: var(--log-info);
+}
+
+.log-console .log-entry.warning .log-level {
+  color: var(--log-warning);
+}
+
+.log-console .log-entry.error .log-level {
+  color: var(--log-error);
+}
+
+.log-console .log-entry.debug .log-level {
+  color: var(--log-debug);
+}
+
+.log-console .log-entry.success .log-level {
+  color: var(--log-success);
+}
+
+/* Scrollbar Styling */
+.log-console .log-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.log-console .log-body::-webkit-scrollbar-track {
+  background: var(--mobsf-bg-darker);
+}
+
+.log-console .log-body::-webkit-scrollbar-thumb {
+  background: var(--mobsf-border-dark);
+  border-radius: 4px;
+}
+
+.log-console .log-body::-webkit-scrollbar-thumb:hover {
+  background: var(--mobsf-text-muted);
+}
+
+/* Auto-scroll behavior */
+.log-console.auto-scroll .log-body {
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   Modern Error Display
+   ============================================ */
+.mobsf-error-card {
+  background: var(--mobsf-bg-card);
+  border-radius: var(--mobsf-radius-lg);
+  box-shadow: var(--mobsf-shadow-md);
+  overflow: hidden;
+  border-left: 4px solid var(--mobsf-danger);
+  margin-bottom: var(--mobsf-spacing-lg);
+}
+
+.mobsf-error-card.error-warning {
+  border-left-color: var(--mobsf-warning);
+}
+
+.mobsf-error-card.error-info {
+  border-left-color: var(--mobsf-info);
+  border-left-width: 4px;
+}
+
+.mobsf-error-card .error-header {
+  background: var(--mobsf-danger-light);
+  padding: var(--mobsf-spacing-md) var(--mobsf-spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--mobsf-spacing-md);
+}
+
+.error-warning .error-header {
+  background: var(--mobsf-warning-light);
+}
+
+.error-info .error-header {
+  background: var(--mobsf-info-light);
+}
+
+.mobsf-error-card .error-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--mobsf-danger);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.error-warning .error-icon {
+  background: var(--mobsf-warning);
+}
+
+.error-info .error-icon {
+  background: var(--mobsf-info);
+}
+
+.mobsf-error-card .error-title {
+  font-weight: 600;
+  color: var(--mobsf-text-primary);
+  font-size: 1rem;
+}
+
+.mobsf-error-card .error-body {
+  padding: var(--mobsf-spacing-lg);
+}
+
+.mobsf-error-card .error-summary {
+  color: var(--mobsf-text-primary);
+  margin-bottom: var(--mobsf-spacing-md);
+  line-height: 1.6;
+}
+
+.mobsf-error-card .error-cause {
+  background: var(--mobsf-bg-card-alt);
+  padding: var(--mobsf-spacing-md);
+  border-radius: var(--mobsf-radius-md);
+  margin-bottom: var(--mobsf-spacing-md);
+  border: 1px solid var(--mobsf-border);
+}
+
+.mobsf-error-card .error-cause-label {
+  font-weight: 600;
+  color: var(--mobsf-text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--mobsf-spacing-xs);
+}
+
+.mobsf-error-card .error-cause-text {
+  color: var(--mobsf-text-primary);
+  font-size: 0.9rem;
+}
+
+.mobsf-error-card .error-suggestion {
+  background: #e8f5e9;
+  padding: var(--mobsf-spacing-md);
+  border-radius: var(--mobsf-radius-md);
+  margin-bottom: var(--mobsf-spacing-md);
+  border: 1px solid var(--mobsf-success);
+}
+
+.error-warning .error-suggestion {
+  background: #fff8e1;
+  border-color: var(--mobsf-warning);
+}
+
+.mobsf-error-card .error-suggestion-label {
+  font-weight: 600;
+  color: var(--mobsf-success);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--mobsf-spacing-xs);
+}
+
+.error-warning .error-suggestion-label {
+  color: var(--mobsf-warning);
+}
+
+.mobsf-error-card .error-suggestion-text {
+  color: var(--mobsf-text-primary);
+  font-size: 0.9rem;
+}
+
+.mobsf-error-card .error-suggestion-code {
+  background: var(--mobsf-bg-darker);
+  color: var(--mobsf-text-light);
+  padding: var(--mobsf-spacing-sm) var(--mobsf-spacing-md);
+  border-radius: var(--mobsf-radius-sm);
+  font-family: var(--mobsf-font-mono);
+  font-size: 0.85rem;
+  margin-top: var(--mobsf-spacing-sm);
+  overflow-x: auto;
+}
+
+.mobsf-error-card .error-technical {
+  border-top: 1px solid var(--mobsf-border);
+  padding-top: var(--mobsf-spacing-md);
+  margin-top: var(--mobsf-spacing-md);
+}
+
+.mobsf-error-card .error-toggle {
+  background: none;
+  border: none;
+  color: var(--mobsf-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--mobsf-spacing-xs);
+  padding: 0;
+}
+
+.mobsf-error-card .error-toggle:hover {
+  text-decoration: underline;
+}
+
+.mobsf-error-card .error-technical-details {
+  display: none;
+  margin-top: var(--mobsf-spacing-md);
+  background: var(--mobsf-bg-dark);
+  padding: var(--mobsf-spacing-md);
+  border-radius: var(--mobsf-radius-md);
+  font-family: var(--mobsf-font-mono);
+  font-size: 0.8rem;
+  color: var(--mobsf-text-light);
+  overflow-x: auto;
+}
+
+.mobsf-error-card .error-technical-details.show {
+  display: block;
+}
+
+/* ============================================
+   Severity Badges
+   ============================================ */
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--mobsf-radius-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.severity-badge.critical {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.severity-badge.high {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.severity-badge.medium {
+  background: #fff8e1;
+  color: #f9a825;
+}
+
+.severity-badge.low {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.severity-badge.info {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+/* ============================================
+   Card Improvements
+   ============================================ */
+.mobsf-card {
+  background: var(--mobsf-bg-card);
+  border-radius: var(--mobsf-radius-lg);
+  box-shadow: var(--mobsf-shadow-md);
+  overflow: hidden;
+  margin-bottom: var(--mobsf-spacing-lg);
+}
+
+.mobsf-card .card-header {
+  background: var(--mobsf-bg-card-alt);
+  padding: var(--mobsf-spacing-md) var(--mobsf-spacing-lg);
+  border-bottom: 1px solid var(--mobsf-border);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobsf-card .card-header .card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--mobsf-spacing-sm);
+  color: var(--mobsf-text-primary);
+}
+
+.mobsf-card .card-body {
+  padding: var(--mobsf-spacing-lg);
+}
+
+.mobsf-card .card-footer {
+  background: var(--mobsf-bg-card-alt);
+  padding: var(--mobsf-spacing-md) var(--mobsf-spacing-lg);
+  border-top: 1px solid var(--mobsf-border);
+}
+
+/* ============================================
+   Table Improvements
+   ============================================ */
+.mobsf-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mobsf-table th {
+  background: var(--mobsf-bg-card-alt);
+  padding: var(--mobsf-spacing-md);
+  text-align: left;
+  font-weight: 600;
+  color: var(--mobsf-text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--mobsf-border);
+}
+
+.mobsf-table td {
+  padding: var(--mobsf-spacing-md);
+  border-bottom: 1px solid var(--mobsf-border);
+  color: var(--mobsf-text-primary);
+}
+
+.mobsf-table tr:hover {
+  background: var(--mobsf-bg-card-alt);
+}
+
+/* ============================================
+   Button Improvements
+   ============================================ */
+.btn-mobsf-primary {
+  background: linear-gradient(135deg, var(--mobsf-primary) 0%, var(--mobsf-primary-dark) 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: var(--mobsf-spacing-sm) var(--mobsf-spacing-lg);
+  border-radius: var(--mobsf-radius-md);
+  transition: var(--mobsf-transition);
+}
+
+.btn-mobsf-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--mobsf-shadow-md);
+  color: white;
+}
+
+.btn-mobsf-success {
+  background: var(--mobsf-success);
+  border: none;
+  color: white;
+}
+
+.btn-mobsf-danger {
+  background: var(--mobsf-danger);
+  border: none;
+  color: white;
+}
+
+/* ============================================
+   Responsive Utilities
+   ============================================ */
+@media (max-width: 768px) {
+  .device-status-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .workflow-step {
+    min-width: 100%;
+  }
+  
+  .log-console {
+    height: 300px;
+  }
+  
+  .log-console .log-search {
+    width: 100px;
+  }
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+  .log-console,
+  .device-status-panel,
+  .workflow-status-panel {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}

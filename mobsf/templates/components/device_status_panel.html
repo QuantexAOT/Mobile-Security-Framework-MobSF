@@ -1,0 +1,136 @@
+{% load static %}
+{% comment %}
+  Device Status Panel Component
+  
+  Usage:
+  {% include "components/device_status_panel.html" with device_info=device_info %}
+  
+  Required context variables:
+  - device_info: Dictionary containing device status information
+    - device_name: Name of the device
+    - android_version: Android version
+    - api_level: API level
+    - is_rooted: Root status (true/false)
+    - device_type: "emulator" or "real"
+    - frida_status: Frida connection status
+    - selinux_status: SELinux status
+    - connected: Connection status
+{% endcomment %}
+
+<div class="device-status-panel">
+  <div class="panel-header">
+    <span><i class="fas fa-mobile-alt"></i> Device Status</span>
+    <span class="device-uptime" id="deviceUptime" style="font-size: 0.75rem; font-weight: 400;"></span>
+  </div>
+  
+  <div class="device-status-grid">
+    <!-- Device Name -->
+    <div class="device-status-item">
+      <span class="status-label">Device</span>
+      <span class="status-value">
+        <i class="fas fa-mobile-alt status-icon" style="color: var(--mobsf-primary);"></i>
+        {{ device_info.device_name|default:"Unknown" }}
+      </span>
+    </div>
+    
+    <!-- Android Version -->
+    <div class="device-status-item">
+      <span class="status-label">Android</span>
+      <span class="status-value">
+        <i class="fab fa-android status-icon" style="color: #3ddc84;"></i>
+        {{ device_info.android_version|default:"N/A" }} (API {{ device_info.api_level|default:"?" }})
+      </span>
+    </div>
+    
+    <!-- Connection Status -->
+    <div class="device-status-item">
+      <span class="status-label">Connection</span>
+      <span class="status-value">
+        {% if device_info.connected %}
+          <span class="status-badge connected"><i class="fas fa-check-circle"></i> Connected</span>
+        {% else %}
+          <span class="status-badge disconnected"><i class="fas fa-times-circle"></i> Disconnected</span>
+        {% endif %}
+      </span>
+    </div>
+    
+    <!-- Device Type (Emulator vs Real) -->
+    <div class="device-status-item">
+      <span class="status-label">Type</span>
+      <span class="status-value">
+        {% if device_info.device_type == "emulator" %}
+          <span class="status-badge emulator"><i class="fas fa-desktop"></i> Emulator</span>
+        {% else %}
+          <span class="status-badge real-device"><i class="fas fa-mobile"></i> Real Device</span>
+        {% endif %}
+      </span>
+    </div>
+    
+    <!-- Root Status -->
+    <div class="device-status-item">
+      <span class="status-label">Root Access</span>
+      <span class="status-value">
+        {% if device_info.is_rooted %}
+          <span class="status-badge rooted"><i class="fas fa-unlock"></i> Rooted</span>
+        {% else %}
+          <span class="status-badge not-rooted"><i class="fas fa-lock"></i> Not Rooted</span>
+        {% endif %}
+      </span>
+    </div>
+    
+    <!-- Frida Status -->
+    <div class="device-status-item">
+      <span class="status-label">Frida</span>
+      <span class="status-value">
+        {% if device_info.frida_status == "active" %}
+          <span class="status-badge frida-active"><i class="fas fa-bolt"></i> Active</span>
+        {% else %}
+          <span class="status-badge frida-inactive"><i class="fas fa-bolt"></i> Inactive</span>
+        {% endif %}
+      </span>
+    </div>
+    
+    <!-- SELinux Status -->
+    <div class="device-status-item">
+      <span class="status-label">SELinux</span>
+      <span class="status-value">
+        {% if device_info.selinux_status == "Enforcing" %}
+          <span class="status-badge enforcing"><i class="fas fa-shield-alt"></i> Enforcing</span>
+        {% else %}
+          <span class="status-badge permissive"><i class="fas fa-shield-alt"></i> Permissive</span>
+        {% endif %}
+      </span>
+    </div>
+    
+    <!-- Battery (if available) -->
+    {% if device_info.battery_level %}
+    <div class="device-status-item">
+      <span class="status-label">Battery</span>
+      <span class="status-value">
+        <i class="fas fa-battery-half status-icon" style="color: {% if device_info.battery_level > 50 %}var(--mobsf-success){% else %}var(--mobsf-warning){% endif %};"></i>
+        {{ device_info.battery_level }}%
+      </span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+// Device uptime tracker
+(function() {
+  let startTime = Date.now();
+  
+  function updateUptime() {
+    const elapsed = Date.now() - startTime;
+    const hours = Math.floor(elapsed / 3600000);
+    const minutes = Math.floor((elapsed % 3600000) / 60000);
+    const element = document.getElementById('deviceUptime');
+    if (element) {
+      element.textContent = hours > 0 ? `Uptime: ${hours}h ${minutes}m` : `Uptime: ${minutes}m`;
+    }
+  }
+  
+  setInterval(updateUptime, 60000);
+  updateUptime();
+})();
+</script>

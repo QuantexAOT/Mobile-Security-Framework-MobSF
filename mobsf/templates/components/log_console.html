@@ -1,0 +1,239 @@
+{% comment %}
+  Modern Log Console Component
+  
+  A professional log viewer similar to Android Studio Logcat or Burp Suite logs.
+  
+  Usage:
+  {% include "components/log_console.html" with log_container_id="myLogs" %}
+  
+  Optional parameters:
+  - log_container_id: ID for the log container (default: "logConsole")
+  - auto_scroll: Enable auto-scroll by default (default: true)
+  - max_entries: Maximum number of log entries to keep (default: 1000)
+{% endcomment %}
+
+<div class="log-console {% if auto_scroll|default:true %}auto-scroll{% endif %}" id="{{ log_container_id|default:'logConsole' }}">
+  <div class="log-header">
+    <span class="log-title">
+      <i class="fas fa-terminal"></i>
+      <span>Log Output</span>
+      <span id="{{ log_container_id|default:'logConsole' }}Count" class="log-count" style="font-size: 0.7rem; opacity: 0.7; margin-left: 8px;">(0 entries)</span>
+    </span>
+    <div class="log-controls">
+      <!-- Filter buttons -->
+      <button class="log-filter-btn active" data-filter="all" title="Show all logs">
+        <i class="fas fa-list"></i>
+      </button>
+      <button class="log-filter-btn" data-filter="info" title="Show INFO">
+        INFO
+      </button>
+      <button class="log-filter-btn" data-filter="warning" title="Show WARNING">
+        WARN
+      </button>
+      <button class="log-filter-btn" data-filter="error" title="Show ERROR">
+        ERROR
+      </button>
+      <button class="log-filter-btn" data-filter="debug" title="Show DEBUG">
+        DEBUG
+      </button>
+      
+      <!-- Search -->
+      <input type="text" class="log-search" placeholder="Search logs..." data-filter-search>
+      
+      <!-- Auto-scroll toggle -->
+      <button class="log-filter-btn" id="{{ log_container_id|default:'logConsole' }}AutoScroll" title="Toggle auto-scroll">
+        <i class="fas fa-arrow-down"></i>
+      </button>
+      
+      <!-- Clear logs -->
+      <button class="log-filter-btn" id="{{ log_container_id|default:'logConsole' }}Clear" title="Clear logs">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="log-body" id="{{ log_container_id|default:'logConsole' }}Body">
+    {% if logs %}
+      {% for log in logs %}
+      <div class="log-entry {{ log.level|lower }}">
+        <span class="log-timestamp">{{ log.timestamp }}</span>
+        <span class="log-level">{{ log.level }}</span>
+        <span class="log-message">{{ log.message }}</span>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="log-empty" style="color: var(--mobsf-text-muted); text-align: center; padding: 40px;">
+      <i class="fas fa-terminal" style="font-size: 2rem; margin-bottom: 10px; display: block; opacity: 0.5;"></i>
+      <span>Waiting for log entries...</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+(function() {
+  const containerId = '{{ log_container_id|default:"logConsole" }}';
+  const container = document.getElementById(containerId);
+  const logBody = document.getElementById(containerId + 'Body');
+  const countEl = document.getElementById(containerId + 'Count');
+  const maxEntries = {{ max_entries|default:1000 }};
+  
+  let autoScroll = {{ auto_scroll|default:true|lower }};
+  let currentFilter = 'all';
+  let searchTerm = '';
+  let entryCount = 0;
+  
+  if (!container) return;
+  
+  // Store log entries
+  let logEntries = [];
+  
+  // Expose function to add logs
+  window.addLogEntry = function(level, message, timestamp) {
+    const time = timestamp || new Date().toLocaleTimeString();
+    const entry = { level: level, message: message, timestamp: time };
+    
+    logEntries.push(entry);
+    
+    // Remove oldest if over limit
+    if (logEntries.length > maxEntries) {
+      logEntries.shift();
+    }
+    
+    renderLogs();
+    updateCount();
+  };
+  
+  // Render logs based on current filter
+  function renderLogs() {
+    // Clear current content
+    logBody.innerHTML = '';
+    
+    let visibleCount = 0;
+    
+    logEntries.forEach(function(entry) {
+      // Apply filter
+      if (currentFilter !== 'all' && entry.level.toLowerCase() !== currentFilter) {
+        return;
+      }
+      
+      // Apply search
+      if (searchTerm && !entry.message.toLowerCase().includes(searchTerm.toLowerCase())) {
+        return;
+      }
+      
+      visibleCount++;
+      
+      const div = document.createElement('div');
+      div.className = 'log-entry ' + entry.level.toLowerCase();
+      div.innerHTML = [
+        '<span class="log-timestamp">', entry.timestamp, '</span>',
+        '<span class="log-level">', entry.level, '</span>',
+        '<span class="log-message">', escapeHtml(entry.message), '</span>'
+      ].join('');
+      
+      logBody.appendChild(div);
+    });
+    
+    if (visibleCount === 0) {
+      logBody.innerHTML = [
+        '<div class="log-empty" style="color: var(--mobsf-text-muted); text-align: center; padding: 40px;">',
+        '<i class="fas fa-terminal" style="font-size: 2rem; margin-bottom: 10px; display: block; opacity: 0.5;"></i>',
+        '<span>No logs to display</span>',
+        '</div>'
+      ].join('');
+    }
+    
+    // Auto-scroll to bottom
+    if (autoScroll) {
+      logBody.scrollTop = logBody.scrollHeight;
+    }
+  }
+  
+  // Update entry count
+  function updateCount() {
+    entryCount = logEntries.length;
+    if (countEl) {
+      countEl.textContent = '(' + entryCount + ' entries)';
+    }
+  }
+  
+  // Escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Filter button handlers
+  container.querySelectorAll('.log-filter-btn[data-filter]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      // Update active state
+      container.querySelectorAll('.log-filter-btn[data-filter]').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      this.classList.add('active');
+      
+      currentFilter = this.dataset.filter;
+      renderLogs();
+    });
+  });
+  
+  // Search handler
+  const searchInput = container.querySelector('.log-search[data-filter-search]');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      searchTerm = this.value;
+      renderLogs();
+    });
+  }
+  
+  // Auto-scroll toggle
+  const autoScrollBtn = document.getElementById(containerId + 'AutoScroll');
+  if (autoScrollBtn) {
+    autoScrollBtn.addEventListener('click', function() {
+      autoScroll = !autoScroll;
+      this.classList.toggle('active', autoScroll);
+      if (autoScroll) {
+        logBody.scrollTop = logBody.scrollHeight;
+      }
+    });
+    // Set initial state
+    autoScrollBtn.classList.add('active');
+  }
+  
+  // Clear logs
+  const clearBtn = document.getElementById(containerId + 'Clear');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function() {
+      logEntries = [];
+      renderLogs();
+      updateCount();
+    });
+  }
+  
+  // Scroll handler to disable auto-scroll when user scrolls up
+  logBody.addEventListener('scroll', function() {
+    const isAtBottom = logBody.scrollHeight - logBody.scrollTop <= logBody.clientHeight + 50;
+    if (!isAtBottom && autoScroll) {
+      autoScroll = false;
+      if (autoScrollBtn) {
+        autoScrollBtn.classList.remove('active');
+      }
+    }
+  });
+  
+  // Expose helper functions for backward compatibility
+  window.print_status = function(msg) {
+    addLogEntry('INFO', msg);
+  };
+  
+  window.print_log = function(msg) {
+    addLogEntry('DEBUG', msg);
+  };
+  
+  window.print_error = function(msg) {
+    addLogEntry('ERROR', msg);
+  };
+})();
+</script>
