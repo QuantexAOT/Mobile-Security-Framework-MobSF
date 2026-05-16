@@ -1,308 +1,133 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Mobile Security Framework (MobSF) - Automated mobile application security analysis">
-  <meta name="author" content="Ajin Abraham">
-  <link rel="icon" href="{% static "img/favicon.ico" %}">
-  <title>Mobile Security Framework - MobSF</title>
-  <link rel="stylesheet" href="{% static "adminlte/dashboard/css/adminlte.min.css" %}">
-  <link rel="stylesheet" href="{% static "adminlte/plugins/fontawesome-free/css/all.min.css" %}">
-  <link rel="stylesheet" href="{% static "others/css/spinner.css" %}">
-  <style>
-/* HOMEPAGE REDESIGN - Dark Security Theme */
-:root {
-  --bg-dark: #0d1117;
-  --bg-card: #161b22;
-  --bg-input: #0d1117;
-  --border: #30363d;
-  --text-primary: #f0f6fc;
-  --text-secondary: #8b949e;
-  --accent-green: #238636;
-  --accent-blue: #58a6ff;
-}
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Mobile Security Framework (MobSF) is an automated, all-in-one mobile application (Android/iOS/Windows) pen-testing, malware analysis and security assessment framework capable of performing static and dynamic analysis.">
+      <meta name="author" content="Ajin Abraham">
+      <link rel="icon" href="{% static "img/favicon.ico" %}">
+      <title>Mobile Security Framework - MobSF</title>
+      <link rel="stylesheet" href="{% static "adminlte/dashboard/css/adminlte.min.css" %}">
+      <style>
+      /* Dark theme override */
+      body { background: #0d1117; color: #f0f6fc; }
+      .nav-masthead { background: rgba(22,27,34,0.95); border-bottom: 1px solid #30363d; border-radius: 12px; padding: 12px 24px; }
+      .nav-link { color: #8b949e !important; font-weight: 500; font-size: 13px; padding: 10px 16px !important; border-radius: 8px; }
+      .nav-link:hover, .nav-link.active { color: #f0f6fc !important; background: rgba(88,166,255,0.1); }
+      .pad { padding: 0 20px; }
+      .fileUpload { background: linear-gradient(135deg,#238636,#2ea043); border: none; font-weight: 600; padding: 18px 36px; border-radius: 12px; box-shadow: 0 8px 24px rgba(35,134,54,0.3); cursor: pointer; }
+      .fileUpload:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(35,134,54,0.5); }
+      .fileUpload input { position: absolute; top: 0; left: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+      .mastfoot { background: #161b22; border-top: 1px solid #30363d; border-radius: 12px; padding: 20px; }
+      .mastfoot a { color: #8b949e; text-decoration: none; padding: 8px 12px; }
+      .mastfoot a:hover { color: #58a6ff; }
+      .dropdown-menu { background: #161b22 !important; border: 1px solid #30363d !important; border-radius: 8px; }
+      .dropdown-item { color: #f0f6fc !important; }
+      .dropdown-item:hover { background: rgba(88,166,255,0.1) !important; }
+      .dropdown-divider { border-color: #30363d; }
+      .form-control-sm { background: #0d1117 !important; border: 1px solid #30363d !important; color: #f0f6fc !important; border-radius: 8px; }
+      #drop { border: 2px dashed #238636; border-radius: 24px; padding: 50px; transition: all 0.3s; }
+      #drop:hover { background: rgba(35,134,54,0.15); }
+      #textnode { color: #238636; font-size: 28px; font-weight: 600; }
+      small { color: #8b949e; }
+      #status { color: #58a6ff; font-family: monospace; }
+      .lead { color: #58a6ff; }
+      #progressBar { height: 8px; border-radius: 4px; background: #30363d; }
+      .alert-bar { background: #238636; color: white; opacity: 0; transform: translateY(20px); transition: all 0.3s; border-radius: 8px; }
+      .alert-bar.show { opacity: 1; transform: translateY(0); }
+      .loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+      </style>
+      <link rel="stylesheet" href="{% static "adminlte/plugins/fontawesome-free/css/all.min.css" %}">
+      <link rel="stylesheet" href="{% static "others/css/spinner.css" %}">
+      <link rel="stylesheet" href="{% static "landing/css/home.css" %}">
+      <!-- Google Font: Source Sans Pro -->
+      <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+   </head>
+   <body class="text-center">
 
-body {
-  background: var(--bg-dark);
-  color: var(--text-primary);
-  min-height: 100vh;
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-}
+    <div class="d-flex h-100 p-3 mx-auto flex-column">  
+        <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link active" href="{% url 'recent' %}">SCANS</a>
+            <a class="nav-link" href="{% url 'dynamic' %}">DYNAMIC ANALYZER</a>
+            <div class="pad">
+                <img src="{% static "img/mobsf_logo.png" %}" alt="MobSF Logo" height="30" width="90" />
+            </div>  
+            <a class="nav-link" href="{% url 'api_docs' %}">API</a>
+            <a class="nav-link" href="{% url 'about' %}">ABOUT</a>
+            {% if user.is_authenticated %}
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-user-circle" aria-hidden="true"></i> </a>
+            <a class="nav-link"></a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow" style="left: 0px; right: inherit;">
+                <li><a href="#" class="dropdown-item"> <small>{{ request.user.username }} <span class="badge badge-primary"> {% if user.is_staff %} Admin {% else %}{{ request.user.groups.all.0 }} {% endif %}</span></small></a></li>
+                <li class="dropdown-divider"></li>
+                <li><a href="{% url 'change_password' %}" class="dropdown-item"><i class="fa fa-asterisk" aria-hidden="true"></i> Change Password </a></li>
+                {% if user.is_staff %}<li><a href="{% url 'users' %}" class="dropdown-item"><i class="fa fa-users" aria-hidden="true"></i> User Management </a></li>{% endif %}
+                <li><a href="{% url 'logout' %}" class="dropdown-item"><i class="fa fa-power-off" aria-hidden="true"></i> Logout </a></li>
+            </ul>
+            {% endif %}
+            <a class="nav-link">
+                <form action="/search" method="GET">
+                    <input name="query" type="text" class="form-control form-control-sm" placeholder="Search">
+                </form>
+            </a>
+        </nav>
 
-/* Navigation */
-.nav-masthead {
-  background: rgba(22, 27, 34, 0.8);
-  backdrop-filter: blur(10px);
-  padding: 16px 32px;
-  border-bottom: 1px solid var(--border);
-  border-radius: 12px;
-  margin-bottom: 40px;
-}
-
-.nav-link {
-  color: var(--text-secondary) !important;
-  font-weight: 500;
-  font-size: 13px;
-  padding: 10px 16px !important;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.nav-link:hover, .nav-link.active {
-  color: var(--text-primary) !important;
-  background: rgba(88, 166, 255, 0.1);
-}
-
-.pad {
-  padding: 0 24px;
-}
-
-.pad img {
-  height: 36px;
-}
-
-/* Search */
-.form-control-sm {
-  background: var(--bg-input) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text-primary) !important;
-  border-radius: 8px;
-}
-
-.form-control-sm::placeholder {
-  color: var(--text-secondary);
-}
-
-/* Drop Zone */
-#drop {
-  background: rgba(35, 134, 54, 0.1);
-  border: 2px dashed var(--accent-green);
-  border-radius: 24px;
-  padding: 60px;
-  transition: all 0.3s ease;
-}
-
-#textnode {
-  color: var(--accent-green);
-  font-size: 32px;
-  font-weight: 600;
-}
-
-#drop.drag-over {
-  background: rgba(35, 134, 54, 0.2);
-  transform: scale(1.05);
-}
-
-/* Upload Button */
-.fileUpload {
-  background: linear-gradient(135deg, var(--accent-green) 0%, #2ea043 100%);
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 18px 36px;
-  border-radius: 12px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(35, 134, 54, 0.3);
-}
-
-.fileUpload:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(35, 134, 54, 0.5);
-}
-
-.fileUpload input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-}
-
-.fileUpload .fas {
-  margin-right: 10px;
-}
-
-small {
-  color: var(--text-secondary);
-}
-
-/* Status */
-#status {
-  color: var(--accent-blue);
-  font-family: 'SF Mono', monospace;
-  font-size: 14px;
-  min-height: 24px;
-}
-
-/* Progress */
-#progressBar {
-  height: 8px;
-  border-radius: 4px;
-  background: var(--border);
-}
-
-#progressBar::-webkit-progress-value {
-  background: linear-gradient(90deg, var(--accent-green), #2ea043);
-  border-radius: 4px;
-}
-
-/* Footer */
-.mastfoot {
-  background: var(--bg-card);
-  padding: 24px;
-  border-top: 1px solid var(--border);
-  border-radius: 12px;
-  margin-top: 40px;
-}
-
-.mastfoot a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  padding: 8px 16px;
-  transition: color 0.2s ease;
-}
-
-.mastfoot a:hover {
-  color: var(--accent-blue);
-}
-
-/* Package Input */
-#package {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text-primary) !important;
-  border-radius: 8px;
-  padding: 12px 16px;
-}
-
-/* Dropdown */
-.dropdown-menu {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 8px;
-  padding: 8px;
-}
-
-.dropdown-item {
-  color: var(--text-primary) !important;
-  border-radius: 6px;
-  padding: 10px 16px;
-}
-
-.dropdown-item:hover {
-  background: rgba(88, 166, 255, 0.1) !important;
-}
-
-.dropdown-divider {
-  border-color: var(--border);
-}
-
-/* Alert */
-.alert-bar {
-  background: var(--accent-green);
-  color: white;
-  padding: 16px 24px;
-  border-radius: 8px;
-  font-weight: 500;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.3s ease;
-}
-
-.alert-bar.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Loading */
-.loading {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-}
-</style>
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-</head>
-<body class="text-center">
-
-  <div class="d-flex h-100 p-3 mx-auto flex-column" style="max-width: 900px;">  
-    <nav class="nav nav-masthead justify-content-center">
-        <a class="nav-link active" href="{% url 'recent' %}"><i class="fas fa-search"></i> Scans</a>
-        <a class="nav-link" href="{% url 'dynamic' %}"><i class="fas fa-mobile-alt"></i> Dynamic</a>
-        <div class="pad">
-            <img src="{% static "img/mobsf_logo.png" %}" alt="MobSF" />
-        </div>  
-        <a class="nav-link" href="{% url 'api_docs' %}"><i class="fas fa-code"></i> API</a>
-        <a class="nav-link" href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About</a>
-        {% if user.is_authenticated %}
-        <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fas fa-user-circle"></i></a>
-        <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu">
-            <li><a href="#" class="dropdown-item"> <small>{{ request.user.username }} <span class="badge badge-primary"> {% if user.is_staff %} Admin {% else %}{{ request.user.groups.all.0 }} {% endif %}</span></small></a></li>
-            <li class="dropdown-divider"></li>
-            <li><a href="{% url 'change_password' %}" class="dropdown-item"><i class="fas fa-asterisk"></i> Change Password </a></li>
-            {% if user.is_staff %}<li><a href="{% url 'users' %}" class="dropdown-item"><i class="fas fa-users"></i> User Management </a></li>{% endif %}
-            <li><a href="{% url 'logout' %}" class="dropdown-item"><i class="fas fa-power-off"></i> Logout </a></li>
-        </ul>
-        {% endif %}
-        <a class="nav-link">
-            <form action="/search" method="GET">
-                <input name="query" type="text" class="form-control form-control-sm" placeholder="Search...">
-            </form>
-        </a>
-    </nav>
-
-    <header class="masthead mb-auto">
-        <div class="inner">
-        </div>
-    </header>
-
-    <main role="main" class="inner cover">
-        <div class="inner cover">
-            <div id="drop" style="visibility:hidden; opacity:0">
-            <div id="textnode"><i class="fas fa-cloud-upload-alt"></i> Drop anywhere!</div>
+        <header class="masthead mb-auto">
+            <div class="inner">
             </div>
-            </br>
-            <form id="upload_form" enctype="multipart/form-data" method="post">
-            {% csrf_token %}
-            <div class="fileUpload btn btn-lg" id="but">
-                <input type="file" name="file" id="uploadFile" placeholder="Choose File" multiple>
-                <span class="fas fa-cloud-upload-alt"></span>
-                Upload &amp; Analyze
+        </header>
+
+        <main role="main" class="inner cover">
+            <div class="inner cover">
+                <div style="visibility:hidden; opacity:0" id="drop">
+                <div id="textnode">Drop anywhere!</div>
+                </div>
+                </br>
+                <form id="upload_form" enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                <div class="fileUpload btn btn-lg btn-secondary" id="but">
+                    <input type="file" name="file" id="uploadFile" placeholder="Choose File" multiple>
+                    <span class="fas fa-cloud-upload-alt"></span>
+                    Upload &amp; Analyze
+                </div>
+                <br />
+                <small><i>Drag &amp; Drop anywhere!</i></small>
+                <p></p>
+                <h5 class="lead" id="status"></h5>
+                <progress id="progressBar" value="0" max="100" style="width:300px;visibility:hidden;" ></progress>
+                </form>
             </div>
-            <br />
-            <small><i class="fas fa-info-circle"></i> Drag &amp; Drop APK, IPA, APPX, JAR, AAB files</small>
+        </main>
+
+        <footer class="mastfoot mt-auto">
+            <input type="download" id="package" class="form-control form-control-sm" placeholder="Download & Scan Package"/>
             <p></p>
-            <h5 class="lead" id="status"></h5>
-            <progress id="progressBar" value="0" max="100" style="width:300px;visibility:hidden;" ></progress>
-            </form>
-        </div>
-    </main>
+            <div class="inner">
+                <h6> <a href="{% url 'recent' %}">RECENT SCANS</a>  |  <a href="{% url 'dynamic' %}">DYNAMIC ANALYZER</a>  |  <a href="{% url 'api_docs' %}">API</a>   |  <a href="{% url 'donate' %}">DONATE ♥</a> |  <a target="_blank"
+                    href="https://mobsf.github.io/docs/#/">DOCS</a>  | <a href="{% url 'about' %}">ABOUT</a></h6>
+                </br>
+                <p>&copy; {% now "Y" %}  Mobile Security Framework - MobSF {{ version }}</p>
+            </div>
+            <div id="alert" class="alert-bar">Analysis started! Please wait to be redirected or check recent scans after sometime.</div>
+        </footer>
+    </div>
 
-    <footer class="mastfoot mt-auto">
-        <input type="text" id="package" class="form-control form-control-sm" placeholder="Download from Play Store & Scan" style="max-width: 300px; margin: 0 auto;"/>
-        <p></p>
-        <div class="inner">
-            <h6> 
-              <a href="{% url 'recent' %}">Scans</a> | 
-              <a href="{% url 'dynamic' %}">Dynamic</a> | 
-              <a href="{% url 'api_docs' %}">API</a> | 
-              <a href="{% url 'donate' %}">Donate <i class="fas fa-heart"></i></a> | 
-              <a target="_blank" href="https://mobsf.github.io/docs/#/">Docs</a> | 
-              <a href="{% url 'about' %}">About</a>
-            </h6>
-            <p>&copy; {% now "Y" %} MobSF {{ version }}</p>
+    <!--Loading Ring-->
+    <div class="hidden loading">
+        <div class='uil-ring-css' style='transform:scale(0.79);'>
+          <div></div>
         </div>
+    </div>
+
+    <script src="{% static "adminlte/plugins/jquery.min.js" %}"></script>
+    <script src="{% static "adminlte/plugins/bootstrap/bootstrap.bundle.min.js" %}"></script>
+      <script>
+            let warning = "This is a demo MobSF instance. Anything uploaded here will be publicly available. Do you want to continue?";
+            // Result View
+            function load_result(url){
+                hide_loader();
                 // Display alert notification
                 var x = document.getElementById("alert");
                 x.className = "alert-bar show slide-up";
